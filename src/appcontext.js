@@ -72,11 +72,9 @@ function ContextProviderHook(context, actionHandlers, initState) {
     if (props.refDispatch && typeof(props.refDispatch) == 'function')
       props.refDispatch(dispatch, methods)
     return (
-      <div>
-        <context.Provider value={{state, dispatch, methods}}>
-          {props.children}
-        </context.Provider>
-      </div>
+      <context.Provider value={{state, dispatch, methods}}>
+        {props.children}
+      </context.Provider>
     )
   }
 
