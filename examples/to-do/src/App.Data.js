@@ -127,13 +127,14 @@ class AppAction extends React.PureComponent {
 
 }
 
+// Only restore state if there's no deep link and we're not on web
 const loadState = async () => {
-    // Only restore state if there's no deep link and we're not on web
     const savedStateString = localStorage.getItem(PERSISTENCE_KEY);
     return (savedStateString ? JSON.parse(savedStateString) : undefined);
 }
 
-const AppInterfaces = { // standard "templates" for visual components to connect
+// standard "templates" for visual components to connect
+const AppInterfaces = { 
     appLoad: ContextConnector(AppContext,
         (state, props) => ({
             store: state

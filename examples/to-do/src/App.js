@@ -5,15 +5,15 @@ import { AppProvider, AppInterfaces } from './App.Data';
 
 
 // application-UI-pages goes here
-import MainApp from "./Main";
+import Main from "./Main";
+
+const MainApp = AppInterfaces.appLoad(Main);
 
 function App() {
     return (
-        <>
-            <AppProvider>
-                <MainApp />
-            </AppProvider>
-        </>
+        <AppProvider>
+            <MainApp />
+        </AppProvider>
     );
 }
 
