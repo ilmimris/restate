@@ -34,7 +34,7 @@ var AppReducers = {
 
 
     // Todos reducer
-    setTodo: (state, { todos }) => ({ ...state, todos }),
+    setTodos: (state, { todos }) => ({ ...state, todos }),
 
     setGlobal: (state, { key, value }) => ({ ...state, globals: { ...state.globals, [key]: value } }),
     setModule: (state, { moduleName, imports }) => ({ ...state, modules: { ...state.modules, [moduleName]: imports } })
