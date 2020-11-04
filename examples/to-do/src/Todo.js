@@ -1,7 +1,11 @@
-import React from "react";
+import React, { useRef } from "react";
+import { AppAction } from "./App.Data";
 
-export function Todo({ todo, index, completeTodo, removeTodo }) {
+export function Todo({ todo, index}) {
+  const appAction = useRef(null);
   return (
+    <>
+    <AppAction ref={appAction}/>
     <div
       className="todo"
       style={{ textDecoration: todo.isCompleted ? "line-through" : "" }}
@@ -9,9 +13,10 @@ export function Todo({ todo, index, completeTodo, removeTodo }) {
       {todo.text}
 
       <div>
-        <button onClick={() => completeTodo(index)}>Complete</button>
-        <button onClick={() => removeTodo(index)}>x</button>
+        <button onClick={() => appAction.current.completeTodo(index)}>Complete</button>
+        <button onClick={() => appAction.current.removeTodo(index)}>x</button>
       </div>
     </div>
+    </>
   );
 }
