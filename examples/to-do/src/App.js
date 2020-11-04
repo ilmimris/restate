@@ -1,13 +1,11 @@
 import React from 'react'
 
 // application-logic libraries
-import { AppProvider, AppInterfaces } from './App.Data';
+import { AppProvider } from './App.Data';
 
 
 // application-UI-pages goes here
-import Main from "./Main";
-
-const MainApp = AppInterfaces.appLoad(Main);
+import MainApp from "./TodoList";
 
 function App() {
     return (

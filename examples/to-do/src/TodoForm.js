@@ -1,17 +1,17 @@
 import React, { useRef, useState } from "react";
 import { AppAction } from "./App.Data";
 
-export function TodoForm({ addTodo }) {
+export const TodoForm = React.memo(() => {
   const [value, setValue] = useState("");
   const appAction = useRef(null);
 
-  const handleSubmit = e => {
+  const handleSubmit = React.useCallback(e => {
     e.preventDefault();
     if (!value)
       return;
-      appAction.current.addTodo(value);
+    appAction.current.addTodo(value);
     setValue("");
-  };
+  });
 
 
   return (
@@ -26,4 +26,4 @@ export function TodoForm({ addTodo }) {
       </form>
     </>
   );
-}
+})

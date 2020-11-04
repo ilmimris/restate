@@ -134,7 +134,7 @@ const loadState = async () => {
 }
 
 // standard "templates" for visual components to connect
-const AppInterfaces = { 
+const AppInterfaces = {
     appLoad: ContextConnector(AppContext,
         (state, props) => ({
             store: state
@@ -155,6 +155,12 @@ const AppInterfaces = {
                 localStorage.setItem(PERSISTENCE_KEY, JSON.stringify(pState));
             },
 
+        })
+    ),
+
+    todoInfo: ContextConnector(AppContext,
+        (state, props) => ({
+            todos: state.todos
         })
     ),
 }

@@ -1,22 +1,23 @@
-import React, { useRef } from "react";
-import { AppAction } from "./App.Data";
+import React from "react";
 
-export function Todo({ todo, index}) {
-  const appAction = useRef(null);
+export const Todo = React.memo(({ todo, index, complete, remove }) => {
+
+  const statusStyle = { textDecoration: todo.isCompleted ? "line-through" : "" }
+
   return (
     <>
-    <AppAction ref={appAction}/>
-    <div
-      className="todo"
-      style={{ textDecoration: todo.isCompleted ? "line-through" : "" }}
-    >
-      {todo.text}
+      <div
+        key={index}
+        className="todo"
+        style={statusStyle}
+      >
+        {todo.text}
 
-      <div>
-        <button onClick={() => appAction.current.completeTodo(index)}>Complete</button>
-        <button onClick={() => appAction.current.removeTodo(index)}>x</button>
+        <div>
+          <button onClick={() => complete(index)}>Done</button>
+          <button onClick={() => remove(index)}>x</button>
+        </div>
       </div>
-    </div>
     </>
   );
-}
+})
