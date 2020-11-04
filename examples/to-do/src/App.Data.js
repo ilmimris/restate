@@ -4,7 +4,7 @@ import {
     ContextConnector,
     renderActionObject,
     yieldEventLoop
-} from '../../../src/appcontext.js';
+} from 'restate/src/appcontext';
 
 const PERSISTENCE_KEY = 'todoapp';
 
@@ -30,7 +30,7 @@ var AppState = {
 
 var AppReducers = {
     getState: (state, { ref }) => { ref.state = { ...state } },
-    restoreState: (state, {newState}) => ({...state, ...newState}),
+    restoreState: (state, { newState }) => ({ ...state, ...newState }),
 
 
     // Todos reducer
@@ -83,7 +83,7 @@ class AppAction extends React.PureComponent {
         var state = await this.getState();
         const pState = persistState(state);
         console.log(`state to store ${JSON.stringify(pState)}`);
-        await AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(pState))
+        localStorage.setItem(PERSISTENCE_KEY, JSON.stringify(pState))
     }
 
     async getState() {
@@ -128,15 +128,9 @@ class AppAction extends React.PureComponent {
 }
 
 const loadState = async () => {
-    const initialUrl = await Linking.getInitialURL();
-
-    if (Platform.OS !== 'web' && initialUrl == null) {
-        // Only restore state if there's no deep link and we're not on web
-        const savedStateString = await AsyncStorage.getItem(PERSISTENCE_KEY);
-
-        return (savedStateString ? JSON.parse(savedStateString) : undefined);
-    }
-
+    // Only restore state if there's no deep link and we're not on web
+    const savedStateString = localStorage.getItem(PERSISTENCE_KEY);
+    return (savedStateString ? JSON.parse(savedStateString) : undefined);
 }
 
 const AppInterfaces = { // standard "templates" for visual components to connect
@@ -149,11 +143,6 @@ const AppInterfaces = { // standard "templates" for visual components to connect
                 const state = await loadState();
                 if (state !== undefined) {
                     disp({ type: 'restoreState', newState: state })
-
-                    if (state.isSignIn && isExpiryToken(state.userToken)) {
-                        await yieldEventLoop();
-                        disp({ type: 'setSignOut' });
-                    }
                 }
             },
 
@@ -162,7 +151,7 @@ const AppInterfaces = { // standard "templates" for visual components to connect
                 await yieldEventLoop()
                 disp({ type: 'getState', ref })
                 const pState = persistState(ref.state);
-                await AsyncStorage.setItem(PERSISTENCE_KEY, JSON.stringify(pState));
+                localStorage.setItem(PERSISTENCE_KEY, JSON.stringify(pState));
             },
 
         })
