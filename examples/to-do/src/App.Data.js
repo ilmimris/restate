@@ -96,40 +96,6 @@ class AppAction extends React.PureComponent {
         return ref.state
     }
 
-    async addTodo(text) {
-        var state = await this.getState();
-
-        const newTodos = [...state.todos, { text, isCompleted: false }];
-
-        this.disp({ type: 'setTodos', todos: newTodos })
-        await this.storeState();
-
-    }
-
-    async completeTodo(index) {
-        var state = await this.getState();
-
-        const newTodos = [...state.todos];
-        // newTodos[index].isCompleted = true;
-
-        newTodos[index] = {...newTodos[index], isCompleted: true}
-
-        this.disp({ type: 'setTodos', todos: newTodos })
-        await this.storeState();
-
-    }
-
-    async removeTodo(index) {
-        var state = await this.getState();
-
-        const newTodos = [...state.todos];
-        newTodos.splice(index, 1);
-
-        this.disp({ type: 'setTodos', todos: newTodos })
-        await this.storeState();
-
-    }
-
 }
 
 // Only restore state if there's no deep link and we're not on web
@@ -178,33 +144,32 @@ const AppInterfaces = {
         }),
         (disp) => ({
             addTodo: async (text) => {
-                var state = await getState();
+                var state = await getState(disp);
 
                 const newTodos = [...state.todos, { text, isCompleted: false }];
 
-                this.disp({ type: 'setTodos', todos: newTodos })
-                // await this.storeState();
+                disp({ type: 'setTodos', todos: newTodos })
+                persistState(state);
             },
 
             completeTodo: async (index) => {
-                var state = await getState();
-
+                var state = await getState(disp);
                 const newTodos = [...state.todos];
 
                 newTodos[index] = {...newTodos[index], isCompleted: true}
 
-                this.disp({ type: 'setTodos', todos: newTodos })
-                // await this.storeState();
+                disp({ type: 'setTodos', todos: newTodos })
+                persistState(state);
             },
 
             removeTodo: async (index) =>  {
-                var state = await getState();
+                var state = await getState(disp);
 
                 const newTodos = [...state.todos];
                 newTodos.splice(index, 1);
 
-                this.disp({ type: 'setTodos', todos: newTodos })
-                // await this.storeState();
+                disp({ type: 'setTodos', todos: newTodos })
+                persistState(state);
             },
         })
     ),

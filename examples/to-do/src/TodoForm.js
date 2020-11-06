@@ -1,22 +1,19 @@
 import React, { useRef, useState } from "react";
-import { AppAction } from "./App.Data";
 
-export const TodoForm = React.memo(() => {
+export const TodoForm = React.memo(({addTodo}) => {
   const [value, setValue] = useState("");
-  const appAction = useRef(null);
 
   const handleSubmit = React.useCallback(e => {
     e.preventDefault();
     if (!value)
       return;
-    appAction.current.addTodo(value);
+    addTodo(value);
     setValue("");
   });
 
 
   return (
     <>
-      <AppAction ref={appAction} />
       <form onSubmit={handleSubmit}>
         <input
           type="text"

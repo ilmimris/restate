@@ -1,12 +1,12 @@
 import React from "react";
-import { AppAction, AppInterfaces } from './App.Data';
+import { AppInterfaces } from './App.Data';
 
 import "./TodoList.css";
 
 import { Todo } from "./Todo";
 import { TodoForm } from "./TodoForm";
 
-const TodoList = React.memo(({ todos }) => {
+const TodoList = React.memo(({ todos, addTodo, completeTodo, removeTodo }) => {
 
   return (
     <>
@@ -16,9 +16,11 @@ const TodoList = React.memo(({ todos }) => {
             <Todo
               index={index}
               todo={todo}
+              completeTodo={completeTodo}
+              removeTodo={removeTodo}
             />
           ))}
-          <TodoForm />
+          <TodoForm addTodo={addTodo}/>
         </div>
       </div>
     </>

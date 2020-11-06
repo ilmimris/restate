@@ -1,15 +1,15 @@
 import React from "react";
 import { AppAction } from "./App.Data";
 
-export const Todo = React.memo(({ todo, index }) => {
+export const Todo = React.memo(({ todo, index, completeTodo, removeTodo }) => {
   const appAction = React.useRef(null);
 
   const complete = () => {
-    appAction.current.completeTodo(index)
+    completeTodo(index)
   }
 
   const remove = () => {
-    appAction.current.removeTodo(index)
+    removeTodo(index)
   }
 
   const statusStyle = { textDecoration: todo.isCompleted ? "line-through" : "" }
@@ -33,6 +33,5 @@ export const Todo = React.memo(({ todo, index }) => {
     </>
   );
 }, (prev, next) => {
-  console.debug({ prev, next })
   return prev.todo === next.todo
 })
