@@ -1,7 +1,7 @@
 import React from "react";
 import { AppAction } from "./App.Data";
 
-export const Todo = ({ todo, index }) => {
+export const Todo = React.memo(({ todo, index }) => {
   const appAction = React.useRef(null);
 
   const complete = () => {
@@ -32,4 +32,7 @@ export const Todo = ({ todo, index }) => {
       </div>
     </>
   );
-}
+}, (prev, next) => {
+  console.debug({ prev, next })
+  return prev.todo === next.todo
+})

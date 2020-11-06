@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import { AppAction, AppInterfaces } from './App.Data';
 
 import "./TodoList.css";
@@ -6,7 +6,7 @@ import "./TodoList.css";
 import { Todo } from "./Todo";
 import { TodoForm } from "./TodoForm";
 
-const TodoList = ({ todos }) => {
+const TodoList = React.memo(({ todos }) => {
 
   return (
     <>
@@ -14,7 +14,6 @@ const TodoList = ({ todos }) => {
         <div className="todo-list">
           {todos.map((todo, index) => (
             <Todo
-              key={index}
               index={index}
               todo={todo}
             />
@@ -24,6 +23,6 @@ const TodoList = ({ todos }) => {
       </div>
     </>
   );
-}
+})
 
 export default AppInterfaces.todoInfo(TodoList);

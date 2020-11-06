@@ -11,14 +11,17 @@ const PERSISTENCE_KEY = 'todoapp';
 var AppState = {
     todos: [
         {
+            ID: 0,
             text: "Learn about React",
             isCompleted: false
         },
         {
+            ID: 1,
             text: "Meet friend for lunch",
             isCompleted: false
         },
         {
+            ID: 2,
             text: "Build really cool todo app",
             isCompleted: false
         },
@@ -107,7 +110,9 @@ class AppAction extends React.PureComponent {
         var state = await this.getState();
 
         const newTodos = [...state.todos];
-        newTodos[index].isCompleted = true;
+        // newTodos[index].isCompleted = true;
+
+        newTodos[index] = {...newTodos[index], isCompleted: true}
 
         this.disp({ type: 'setTodos', todos: newTodos })
         await this.storeState();
@@ -132,6 +137,15 @@ const loadState = async () => {
     const savedStateString = localStorage.getItem(PERSISTENCE_KEY);
     return (savedStateString ? JSON.parse(savedStateString) : undefined);
 }
+
+// Get State from ref
+const getState = async (disp) => {
+    var ref = {}
+    await yieldEventLoop()
+    disp({type: 'getState', ref})
+    return ref.state;
+};
+
 
 // standard "templates" for visual components to connect
 const AppInterfaces = {
@@ -161,6 +175,37 @@ const AppInterfaces = {
     todoInfo: ContextConnector(AppContext,
         (state, props) => ({
             todos: state.todos
+        }),
+        (disp) => ({
+            addTodo: async (text) => {
+                var state = await getState();
+
+                const newTodos = [...state.todos, { text, isCompleted: false }];
+
+                this.disp({ type: 'setTodos', todos: newTodos })
+                // await this.storeState();
+            },
+
+            completeTodo: async (index) => {
+                var state = await getState();
+
+                const newTodos = [...state.todos];
+
+                newTodos[index] = {...newTodos[index], isCompleted: true}
+
+                this.disp({ type: 'setTodos', todos: newTodos })
+                // await this.storeState();
+            },
+
+            removeTodo: async (index) =>  {
+                var state = await getState();
+
+                const newTodos = [...state.todos];
+                newTodos.splice(index, 1);
+
+                this.disp({ type: 'setTodos', todos: newTodos })
+                // await this.storeState();
+            },
         })
     ),
 }
