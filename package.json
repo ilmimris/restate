@@ -1,6 +1,6 @@
 {
   "name": "sdkx",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "sdk for react app and react native ",
   "main": "src/appcontext.js",
   "types": "src/appcontext.d.ts",
