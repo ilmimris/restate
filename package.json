@@ -1,9 +1,9 @@
 {
   "name": "sdkx",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "sdk for react app and react native ",
   "main": "src/appcontext.js",
-  "types": "types/appcontext.d.ts",
+  "types": "src/appcontext.d.ts",
   "repository": "https://github.com/ilmimris/sdkx.git",
   "author": "Muhammad Rafiul Ilmi Syarifudin <mr.is@arc.itb.ac.id>",
   "license": "MIT",
