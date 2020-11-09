@@ -1,15 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
 export const TodoForm = React.memo(({addTodo}) => {
   const [value, setValue] = useState("");
 
-  const handleSubmit = React.useCallback(e => {
+  const handleSubmit = e => {
     e.preventDefault();
     if (!value)
       return;
     addTodo(value);
     setValue("");
-  });
+  };
 
 
   return (
