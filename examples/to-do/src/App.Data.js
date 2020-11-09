@@ -6,8 +6,6 @@ import {
     yieldEventLoop
 } from 'restate/src/appcontext';
 
-const PERSISTENCE_KEY = 'todoapp';
-
 var AppState = {
     todos: [
         {
@@ -27,20 +25,14 @@ var AppState = {
         },
     ],
 
-    globals: {},  // global object for storing shared libaries and functions
-    modules: {}, // loaded modules from server
 }
 
 var AppReducers = {
     getState: (state, { ref }) => { ref.state = { ...state } },
     restoreState: (state, { newState }) => ({ ...state, ...newState }),
 
-
     // Todos reducer
     setTodos: (state, { todos }) => ({ ...state, todos }),
-
-    setGlobal: (state, { key, value }) => ({ ...state, globals: { ...state.globals, [key]: value } }),
-    setModule: (state, { moduleName, imports }) => ({ ...state, modules: { ...state.modules, [moduleName]: imports } })
 }
 
 const AppContext = React.createContext(null)
@@ -67,6 +59,15 @@ class AppProvider extends React.Component {
     };
 }
 
+// Get State from ref
+const getState = async (disp) => {
+    var ref = {}
+    await yieldEventLoop()
+    disp({ type: 'getState', ref })
+    return ref.state;
+};
+
+
 const persistState = (state) => {
     return {
         todos: state.todos,
@@ -82,62 +83,11 @@ class AppAction extends React.PureComponent {
         return renderActionObject(AppContext, this, (state) => { })
     }
 
-    async storeState() {
-        var state = await this.getState();
-        const pState = persistState(state);
-        console.log(`state to store ${JSON.stringify(pState)}`);
-        localStorage.setItem(PERSISTENCE_KEY, JSON.stringify(pState))
-    }
-
-    async getState() {
-        var ref = {}
-        await yieldEventLoop()
-        this.disp({ type: 'getState', ref })
-        return ref.state
-    }
-
 }
-
-// Only restore state if there's no deep link and we're not on web
-const loadState = async () => {
-    const savedStateString = localStorage.getItem(PERSISTENCE_KEY);
-    return (savedStateString ? JSON.parse(savedStateString) : undefined);
-}
-
-// Get State from ref
-const getState = async (disp) => {
-    var ref = {}
-    await yieldEventLoop()
-    disp({type: 'getState', ref})
-    return ref.state;
-};
 
 
 // standard "templates" for visual components to connect
 const AppInterfaces = {
-    appLoad: ContextConnector(AppContext,
-        (state, props) => ({
-            store: state
-        }),
-        (disp) => ({
-            loadStore: async () => {
-                const state = await loadState();
-                if (state !== undefined) {
-                    disp({ type: 'restoreState', newState: state })
-                }
-            },
-
-            saveStore: async () => {
-                var ref = {}
-                await yieldEventLoop()
-                disp({ type: 'getState', ref })
-                const pState = persistState(ref.state);
-                localStorage.setItem(PERSISTENCE_KEY, JSON.stringify(pState));
-            },
-
-        })
-    ),
-
     todoInfo: ContextConnector(AppContext,
         (state, props) => ({
             todos: state.todos
@@ -146,7 +96,9 @@ const AppInterfaces = {
             addTodo: async (text) => {
                 var state = await getState(disp);
 
-                const newTodos = [...state.todos, { text, isCompleted: false }];
+                const lastID = state.todos.reduce((prev, current) => (prev.ID > current.ID) ? prev : current).ID
+
+                const newTodos = [...state.todos, { ID: lastID + 1, text, isCompleted: false }];
 
                 disp({ type: 'setTodos', todos: newTodos })
                 persistState(state);
@@ -156,13 +108,13 @@ const AppInterfaces = {
                 var state = await getState(disp);
                 const newTodos = [...state.todos];
 
-                newTodos[index] = {...newTodos[index], isCompleted: true}
+                newTodos[index] = { ...newTodos[index], isCompleted: true }
 
                 disp({ type: 'setTodos', todos: newTodos })
                 persistState(state);
             },
 
-            removeTodo: async (index) =>  {
+            removeTodo: async (index) => {
                 var state = await getState(disp);
 
                 const newTodos = [...state.todos];
